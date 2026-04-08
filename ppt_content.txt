@@ -1,0 +1,143 @@
+﻿
+--- Slide 1 ---
+Gokaraju Rangaraju Institute of Engineering and Technology (Autonomous)Department of Data ScienceMini Project Work(CSE(DS))
+Review 3: Module Presentation
+Presented by:1. Karthik Vaishnav (23241A67F9)2. Srinish Reddy (23241A67D8)3. Pranay Teja (23241A67J6)
+Under the Guidance of:Ms. K KalpanaAssistant Professor
+Batch No - 7
+
+--- Slide 2 ---
+Explainable AI (XAI) Dashboard for Students
+2
+
+--- Slide 3 ---
+Introduction
+3
+System Concept: An interactive Explainable AI (XAI) learning dashboard that helps students understand how machine learning models make decisions.Problem Context: Traditional ML tools focus mainly on performance metrics like accuracy, making models appear as black boxes to students.Core Idea: Integrate model training, visualization, and explanation techniques (SHAP and LIME) into a single educational workbench.Data Source: Real-world datasets uploaded by students in CSV format, preprocessed automatically for ML model training and explanation.
+
+--- Slide 4 ---
+Explanation Method: Provide global explanations (overall feature importance) and local explanations (feature contributions for individual predictions) using SHAP and LIME.Dashboard Features: Interactive 2D/3D visualizations, decision boundaries, confusion matrix, and what-if scenario simulation for hands-on learning.ML Models Supported: Support multiple ML models including Logistic Regression, Decision Tree, Random Forest, and SVM with configurable train-test splits.Expected Impact: Transform ML education from a formula-driven process into a visual, interactive, and explanation-driven learning experience.
+4
+
+--- Slide 5 ---
+Discuss Base paper
+Title: “Why Should I Trust You?” Explaining the Predictions of Any ClassifierAuthors: Ribeiro, M. T., Singh, S., & Guestrin, C.     (2016)Journal: Proceedings of the 22nd ACM SIGKDD International Conference, 2016Core Objective: Introduces LIME — a technique to explain predictions of any black-box ML model by approximating it locally with a simple interpretable model. Forms the basis for local explanations in our XAI Dashboard.
+5
+
+--- Slide 6 ---
+6
+Main Points discussed in papers: LIME explains individual predictions by approximating the complex model locally using a simple, interpretable surrogate model. Input perturbations are used to observe how prediction changes, helping identify the most important features for a given prediction. The method is model-agnostic — applicable to any classifier or regressor — improving transparency, trust, and debugging of ML models. Experimental results demonstrate that local explanations significantly improve user trust and understanding compared to black-box model outputs.
+
+--- Slide 7 ---
+Comparison with Base paper
+7
+
+--- Slide 8 ---
+Literature review:
+8
+The literature review shows that Explainable AI (XAI) has become a critical area of research due to the black-box nature of modern ML models. Foundational works such as LIME and SHAP have established widely accepted methods for local and global explanations. Multiple surveys highlight that visualization plays a key role in making explanations understandable to users. Visual analytics frameworks demonstrate that combining interactive visualizations with explanation techniques significantly improves user trust and conceptual understanding. The literature also emphasizes that interpretability is a human-centered problem. Recent studies in educational contexts show that explainable dashboards help non-expert users understand and trust ML systems. Most existing XAI tools are designed for researchers, creating a clear gap for a simplified, student-friendly XAI dashboard that this project addresses.
+
+--- Slide 9 ---
+Literature Review Summary
+9
+
+--- Slide 10 ---
+10
+
+--- Slide 11 ---
+11
+
+--- Slide 12 ---
+12
+
+--- Slide 13 ---
+Research Gaps
+13
+Most existing XAI work focuses on individual explanation methods (SHAP or LIME alone) rather than integrated, end-to-end learning platforms.Existing XAI tools are designed for researchers or industry users, making them complex and unsuitable for students.No unified system combines data preprocessing, model training, evaluation, and explainability in a single interactive environment.Visual analytics XAI systems exist but are research-oriented and difficult to use in educational settings.Limited work on student-friendly, interactive XAI dashboards that support intuitive learning and conceptual understanding of ML models.
+
+--- Slide 14 ---
+Problem statement
+14
+Despite the rapid adoption of machine learning, most learning platforms focus mainly on model accuracy, offering little insight into how and why models make decisions. This lack of explainability causes ML models to appear as black boxes, making it difficult for students to connect theory with real-world behavior. Although XAI methods like SHAP and LIME exist, they are rarely integrated into interactive, student-friendly learning environments. This project proposes an integrated XAI dashboard that combines model training, evaluation, visualization, and explanation to improve conceptual understanding and hands-on ML learning for students.
+
+--- Slide 15 ---
+Objectives
+15
+Develop an interactive XAI learning dashboard that allows students to upload datasets, train ML models, and explore explanations through a unified interface.Integrate both SHAP and LIME explanation techniques to provide global feature importance and local prediction explanations in a student-friendly manner.Support multiple ML models including Logistic Regression, Decision Tree, Random Forest, and SVM with configurable preprocessing and train-test splits.Provide interactive visualizations including 2D/3D feature plots, decision boundaries, confusion matrix, and what-if scenario simulation.Evaluate the effectiveness of the XAI dashboard in improving student conceptual understanding of ML model behavior and feature contributions.
+
+--- Slide 16 ---
+Proposed Solution
+16
+Our proposed system is an interactive Explainable AI (XAI) learning dashboard designed to help students understand how machine learning models make decisions. The system allows users to upload real-world datasets in CSV format and performs automatic preprocessing including handling missing values, encoding categorical variables, and feature scaling. Students can then select from multiple ML models such as Logistic Regression, Decision Tree, Random Forest, and SVM, and configure train-test splits to observe how these choices affect performance. A key component is the XAI layer, which integrates SHAP and LIME along with model-based interpretability methods to provide both global explanations (overall feature importance) and local explanations (feature contributions for individual predictions). The interactive dashboard presents evaluation metrics such as accuracy, precision, recall, F1-score, and confusion matrix in a student-friendly manner. Advanced visualizations including 2D/3D plots and decision boundaries are included to enhance conceptual understanding. The overall goal is to transform ML education from a formula-driven process into a visual, interactive, and explanation-driven learning experience.
+
+--- Slide 17 ---
+Framework OverviewData Input LayerStudents upload CSV datasets via the dashboard interfaceAutomatic preprocessing: missing values, encoding, scalingModel Training LayerSelect ML model (Logistic Regression, Decision Tree, Random Forest, SVM)Configure train-test split and train the selected modelExplanation LayerSHAP for global feature importance and local attributions
+17
+Novelty with respect to Base PaperIntegrated XAI Platform:Unlike base papers that offer only standalone LIME or SHAP, our dashboard integrates both methods with full model training in one platform.Student-Centered Design:The base papers target researchers; our dashboard is simplified for students with guided workflows and friendly visualizations.What-If Scenario Analysis:Students can interactively change feature values to observe how predictions change, a feature not present in the base XAI libraries.
+
+--- Slide 18 ---
+Architecture Diagram
+18
+Data Input LayerStudents upload CSV datasets; the system performs automatic preprocessing and forwards clean data for model training.Model Training LayerUser selects ML model and configures parameters; the system trains and evaluates the model, producing accuracy and performance metrics.Explanation LayerSHAP and LIME generate global and local explanations; feature importance and prediction contributions are computed.Visualization and Output LayerInteractive dashboard displays metrics, 2D/3D plots, decision boundaries, and what-if simulation results for student exploration.
+
+--- Slide 19 ---
+Methodology / Algorithms
+19
+Data Upload and Preprocessing	Students upload real-world CSV datasets. The system performs automatic preprocessing including handling missing values, encoding categorical variables, and feature scaling. Feature selection is also supported, allowing users to observe how input choices affect model performance.ML Model Training	Students select from Logistic Regression, Decision Tree, Random Forest, or SVM. The system trains the chosen model on the preprocessed data and evaluates it using accuracy, precision, recall, F1-score, and confusion matrix.XAI Explanation – SHAP and LIME	SHAP generates global feature importance across the full dataset and local Shapley-value attributions for individual predictions. LIME approximates the model locally using perturbed samples to identify which features drive each specific prediction.Visualization and What-If Analysis	The dashboard renders 2D/3D feature plots, decision boundaries, and SHAP/LIME charts. Students can modify input feature values interactively and observe how the model's prediction changes, enabling deeper conceptual understanding.
+
+--- Slide 20 ---
+Software and Hardware Requirements
+20
+
+--- Slide 21 ---
+Datasets Details
+Iris Dataset (UCI Machine Learning Repository)150 samples, 4 features, 3 classesUsed for classification demonstration and explanationTitanic Dataset (Kaggle)891 training samples, 12 featuresUsage in Project:Used for binary classification and feature importance exploration.
+21
+Typical Dataset AttributesNumerical Features:AgeIncomeScoreCountRateValueCategorical Features:GenderClass / LabelCategoryStatusType
+
+--- Slide 22 ---
+Module connectivity diagram
+
+--- Slide 23 ---
+Data flow diagram
+Data collection starts in the Data Input module, where the student uploads a CSV dataset through the dashboard interface.The collected raw data is sent to the Preprocessing module, where missing values are handled, categorical variables are encoded, and features are scaled.The processed data is stored and passed to the Model Training module, where the selected ML model (Logistic Regression, Decision Tree, Random Forest, or SVM) is trained.The trained models generate predictions for new incoming data, which are forwarded to the Explanation module.In the explanation stage, SHAP and LIME compute global and local feature attributions.If abnormal behavior is detected, the results are sent to the Output module.The output module updates the dashboard, stores logs, and sends real‑time alerts to notify the user.
+
+--- Slide 24 ---
+Control flow diagram
+System starts with data upload, where the student uploads a CSV dataset via the dashboard.The collected data goes to preprocessing and feature engineering, where missing values are handled, encoding and scaling are applied.The processed data is passed to the model, where the selected ML model is trained on the processed data.The model performs prediction and evaluation on the new incoming data.The predicted values are compared with actual values in the explanation stage.If the result is normal, the system displayed on the dashboard for student exploration.If an anomaly is detected, the system re-runs prediction and updates the explanation interactively.If the evaluation shows poor accuracy or model failure, the system goes to model selection and retraining, choose different parameters, and retrain.The process repeats continuously for the different datasets or models, making the dashboard a flexible learning tool.
+
+--- Slide 25 ---
+Modules description
+
+--- Slide 26 ---
+1. Data Input ModuleInputs:Student-uploaded CSV dataset fileUser-selected ML model and configuration parametersProcessing Logic:Dashboard receives CSV upload from studentSystem validates file structure and parses dataDataset preview is displayed for student reviewOutputs:Parsed raw dataset ready for preprocessingInterdependence:Sends parsed dataset to Preprocessing moduleTools / Libraries:Python, Pandas, Streamlit / Flask, CSV parser
+2. Preprocessing ModuleInputs:Parsed raw CSV datasetUser-defined feature selection and train-test split ratioProcessing Logic:Handle missing values (imputation or removal)Encode categorical variables (label/one-hot encoding)Scale numerical features (StandardScaler / MinMaxScaler)Outputs:Cleaned and scaled feature matrixTrain and test split arrays ready for model trainingInterdependence:Receives from Data Input → Sends to Model Training moduleTools / Libraries:Python, Pandas, NumPy, Scikit-learn
+
+--- Slide 27 ---
+27
+3. Model Training ModuleInputs:Cleaned feature matrix, user-selected model type, and train-test splitProcessing Logic:Train chosen ML model: Logistic Regression, Decision Tree, Random Forest, or SVMEvaluate on test set: accuracy, precision, recall, F1-score, confusion matrixSave trained model object for explanation and what-if useOutputs:Trained ML model objectAccuracy, Precision, Recall, F1-score, Confusion MatrixInterdependence:Receives from Preprocessing → Sends trained model to Explanation moduleTools / Libraries:Scikit-learn,Joblib, Python
+4. Explanation ModuleInputs:Trained model objectFull dataset and individual prediction instancesProcessing Logic:Run SHAP: compute global feature importance and local Shapley attributionsRun LIME: perturb input and generate local explanation for each predictionOutputs:SHAP global importance chart, SHAP local attribution valuesLIME explanation bar chart for individual predictionsInterdependence:Receives from Model Training → Sends explanations to Visualization moduleTools / Libraries:SHAP, LIME, NumPy, Python
+
+--- Slide 28 ---
+28
+5. Visualization ModuleInputs:Model metrics, SHAP values, LIME explanations, user feature inputsDataset for 2D/3D plotting and decision boundary renderingProcessing Logic:Render SHAP summary plots and bar chartsRender LIME local explanation chartsDisplay confusion matrix, 2D/3D feature plots, decision boundaryOutputs:Interactive charts rendered on student dashboardWhat-if simulator: re-run prediction on modified feature inputsInterdependence:Receives from Explanation module → Displays to student, sends to OutputTools / Libraries:Plotly, Matplotlib, Streamlit Python, ReportLab (optional)
+6. Output / Export ModuleInputs:Final dashboard views, student session summaryUser-requested export data (charts, metrics)Processing Logic:Compile final model performance summaryAllow export of charts and explanation reports as PDF or imageOutputs:Student-facing dashboard with full explanation and metrics viewDownloadable SHAP/LIME charts and model reportSession log for review and academic submissionInterdependence:Receives from Visualization moduleTools / Libraries:Streamlit, Plotly,, Python
+
+--- Slide 29 ---
+Expected outcomes
+29
+Improved Student Understanding:Students are expected to gain significantly better conceptual understanding of how ML models make decisions through interactive SHAP and LIME explanations.Multi-Model Comparison:The dashboard allows students to train and compare multiple ML models side-by-side, observing how model choice affects accuracy and feature importance.Interactive Explainability:Students can explore both global and local explanations, run what-if simulations, and visually observe how individual feature changes affect predictions.End-to-End Learning Experience:The system provides a complete pipeline from CSV upload to explanation visualization, transforming ML education into a hands-on, insight-driven experience.
+
+--- Slide 30 ---
+References
+30
+1. Ribeiro, M. T., Singh, S., & Guestrin, C. (2016) — Why Should I Trust You? https://dl.acm.org/doi/10.1145/2939672.2939778Base paper on LIME — local model-agnostic explanation of ML predictions. ACM SIGKDD International Conference on Knowledge Discovery and Data Mining.2. Lundberg, S. M., & Lee, S.-I. (2017) — A Unified Approach to Interpreting Model Predictions https://papers.nips.cc/paper/2017/hash/8a20a8621978632d76c43dfd28b67767-Abstract.htmlIntroduces SHAP based on Shapley values for consistent global and local feature attribution.3. Doshi-Velez, F., & Kim, B. (2017) — Towards a Rigorous Science of Interpretable ML https://arxiv.org/abs/1702.08608Defines evaluation frameworks for interpretability and human-centered explanation design.4. Molnar, C. (2019) — Interpretable Machine Learning https://christophm.github.io/interpretable-ml-book/Comprehensive guide covering PDP, SHAP, LIME, Feature Importance with visualizations.5. Spinner, T., et al. (2019) — explAIner: A Visual Analytics Framework for XAI https://ieeexplore.ieee.org/document/8807380Visual analytics system for interactive and explainable ML. IEEE TVCG.
+
+--- Slide 31 ---
+6. “IoT Network Anomaly Detection in Smart Homes Using Machine Learning” (ResearchGate) https://ieeexplore.ieee.org/document/9222346Aggregates local explanations into global summaries. IEEE TVCG.7. Kovalerchuk, B., et al. (2020) — Survey of Explainable ML with Visual Methodshttps://wires.onlinelibrary.wiley.com/doi/10.1002/widm.1375Survey on visual and granular XAI methods. Wiley WIREs Data Mining.8. Khelifi, L., et al. (2024) — EX-LAD: Explainable Dashboards for Learning Analytics https://www.sciencedirect.com/science/article/pii/S2666920X24000432Explainable AI dashboards for educational prediction systems. 9. “Real-Time IoT Energy Monitoring and Hybrid Anomaly Detection” (PDF) https://doi.org/10.1016/j.caeai.2024.100214Open access master’s thesis covering IoT + energy anomaly monitoring. 10. “DÏoT: Federated Self-Learning for IoT Security” — Open Access https://arxiv.org/abs/2501.12345Taxonomy of intrinsic vs post-hoc XAI; reviews LIME, SHAP, Grad-CAM, and Integrated Gradients.Scikit-learn DocumentationSHAP Library Documentationhttps://shap.readthedocs.io/LIME Library Documentation: https://github.com/marcotcr/lime
+31
+
+--- Slide 32 ---
+Thank you
+32
+
