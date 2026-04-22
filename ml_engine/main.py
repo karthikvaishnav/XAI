@@ -23,9 +23,9 @@ app = FastAPI()
 current_data = None
 current_model = None
 X_test_global = None
-X_global = None 
+X_global = None        # Scaled version — for SHAP/LIME (matches what model was trained on)
+X_global_raw = None    # Imputed-but-unscaled version — for human-readable slider display
 feature_cols_global = []
-# --- ADD THIS WITH OTHER GLOBALS ---
 model_artifacts = {
     "imputer": None,
     "scaler": None,
@@ -91,7 +91,7 @@ def load_data(request: LoadRequest):
 
 @app.post('/train')
 def train_model(request: TrainRequest):
-    global current_data, current_model, X_test_global, X_global, feature_cols_global, model_artifacts
+    global current_data, current_model, X_test_global, X_global, X_global_raw, feature_cols_global, model_artifacts
 
     # 1. Load Data
     if current_data is None:
@@ -271,12 +271,35 @@ def train_model(request: TrainRequest):
 
         y_pred = model.predict(X_test)
         acc = accuracy_score(y_test, y_pred)
-        precision = precision_score(y_test, y_pred, average='weighted', zero_division=0)
-        recall = recall_score(y_test, y_pred, average='weighted', zero_division=0)
-        f1 = f1_score(y_test, y_pred, average='weighted', zero_division=0)
+        # Use macro averaging: treats all classes equally, shows more distinct values
+        precision = precision_score(y_test, y_pred, average='macro', zero_division=0)
+        recall = recall_score(y_test, y_pred, average='macro', zero_division=0)
+        f1 = f1_score(y_test, y_pred, average='macro', zero_division=0)
         cm = confusion_matrix(y_test, y_pred)
+
+        # Per-class breakdown for frontend display
+        unique_classes = sorted(set(y_test))
+        per_class_precision = precision_score(y_test, y_pred, average=None, zero_division=0, labels=unique_classes)
+        per_class_recall = recall_score(y_test, y_pred, average=None, zero_division=0, labels=unique_classes)
+        per_class_f1 = f1_score(y_test, y_pred, average=None, zero_division=0, labels=unique_classes)
         
-        print(f"--- TRAINED CLASSIFIER: {request.model_type} | ACCURACY: {acc:.4f} | FEATURES: {len(feature_cols)} | X_TRAIN SHAPE: {X_train.shape} ---")
+        # Map class index back to original labels for display
+        if class_labels:
+            display_labels = [str(class_labels[int(c)]) if int(c) < len(class_labels) else str(c) for c in unique_classes]
+        else:
+            display_labels = [str(c) for c in unique_classes]
+        
+        per_class_metrics = [
+            {
+                "class": display_labels[i],
+                "precision": float(per_class_precision[i]),
+                "recall": float(per_class_recall[i]),
+                "f1": float(per_class_f1[i])
+            }
+            for i in range(len(unique_classes))
+        ]
+        
+        print(f"--- TRAINED CLASSIFIER: {request.model_type} | ACCURACY: {acc:.4f} | MACRO P/R/F1: {precision:.4f}/{recall:.4f}/{f1:.4f} | FEATURES: {len(feature_cols)} ---")
         
         # Feature Importance
         importance_list = []
@@ -329,6 +352,7 @@ def train_model(request: TrainRequest):
         response_data = {
             "model": request.model_type, "task": "classification",
             "metrics": {"accuracy": acc, "precision": precision, "recall": recall, "f1": f1},
+            "per_class_metrics": per_class_metrics,
             "confusion_matrix": {"z": cm.tolist(), "x": cm_labels, "y": cm_labels},
             "feature_importance": importance_list[:10],
             "scatter_data": scatter_data,
@@ -336,17 +360,18 @@ def train_model(request: TrainRequest):
         }
 
     # ✅ COMMIT ARTIFACTS
-    # IMPORTANT: X_global must store X_scaled so SHAP/LIME explainers
-    # receive the same representation the model was trained on.
+    # X_global = scaled data for SHAP/LIME (must match model input)
+    # X_global_raw = imputed-but-unscaled data for human-readable slider display
     model_artifacts = temp_artifacts
-    X_global = X_scaled  # ← was incorrectly set to unscaled X before
+    X_global = X_scaled
+    X_global_raw = X_imputed  # unscaled — used to show real feature values in simulator
     feature_cols_global = feature_cols
 
     return response_data
 
 @app.post('/explain')
 def explain_instance(request: ExplainRequest):
-    global current_model, X_global
+    global current_model, X_global, X_global_raw
 
     print(f"[EXPLAIN] Request: index={request.index}, model={request.model_type}")
 
@@ -444,9 +469,11 @@ def explain_instance(request: ExplainRequest):
 
         explanation = []
         for i, col in enumerate(X_global.columns):
+            # Use raw (unscaled) value for the slider so the UI shows human-readable numbers
+            raw_val = float(X_global_raw.iloc[request.index, i]) if X_global_raw is not None else float(row.iloc[0, i])
             explanation.append({
                 "feature": col,
-                "value": float(row.iloc[0, i]),
+                "value": raw_val,          # human-readable, unscaled
                 "shap_value": float(values[i])
             })
 
@@ -489,20 +516,27 @@ def simulate_prediction(request: SimulationRequest):
         raise HTTPException(status_code=400, detail="train model first")
 
     feature_order = model_artifacts['features']
-    input_data = pd.DataFrame(0, index=[0], columns=feature_order)
+    # Build input from the raw (unscaled) values sent by the UI
+    input_data = pd.DataFrame(0.0, index=[0], columns=feature_order)
 
     for col, val in request.features.items():
         if col in input_data.columns:
             input_data.at[0, col] = float(val)
 
-    # Apply saved scaler so input matches what the model was trained on
+    # Apply imputer first (handles edge cases where value might be NaN)
+    if model_artifacts['imputer'] is not None:
+        imputed_arr = model_artifacts['imputer'].transform(input_data)
+        input_data = pd.DataFrame(imputed_arr, columns=feature_order)
+
+    # Then scale exactly once (same pipeline as training)
     if model_artifacts['scaler'] is not None:
         scaled_arr = model_artifacts['scaler'].transform(input_data)
         input_data = pd.DataFrame(scaled_arr, columns=feature_order)
 
     if hasattr(current_model, "predict_proba"):
         probs = current_model.predict_proba(input_data)[0]
-        prob_value = probs[1] if len(probs) > 1 else probs[0]
+        # For binary: class 1 probability; for multiclass: max class probability
+        prob_value = probs[1] if len(probs) == 2 else float(max(probs))
     else:
         prob_value = float(current_model.predict(input_data)[0])
 

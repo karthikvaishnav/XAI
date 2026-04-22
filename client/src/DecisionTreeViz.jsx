@@ -2,26 +2,29 @@ import React, { useState, useEffect } from 'react';
 import Tree from 'react-d3-tree';
 import axios from 'axios';
 
-// Sci-Fi Theme Colors
+// Ivory & Indigo Theme Colors
 const theme = {
-  glass: "rgba(15, 23, 42, 0.6)",
-  accent: "#22d3ee",       // Cyan
-  text: "#f8fafc",         // White-ish
-  nodeFill: "#0f172a",     // Dark Blue
-  leafFill: "#10b981",     // Green
-  link: "#22d3ee"
+  glass: "rgba(255, 255, 255, 0.6)",
+  accent: "#6366f1",       // Indigo
+  accentSecondary: "#8b5cf6", // Purple
+  text: "#1e293b",         
+  nodeFill: "#f8fafc",     
+  leafFill: "#10b981",     
+  link: "#6366f1"
 };
 
 const containerStyles = {
   width: '100%',
   height: '600px',
-  background: theme.glass,
-  border: `1px solid rgba(34, 211, 238, 0.1)`,
-  borderRadius: '8px',
+  background: "#ffffff",
+  border: `1px solid rgba(0, 0, 0, 0.05)`,
+  borderRadius: '16px',
   overflow: 'hidden',
   position: 'relative',
-  backdropFilter: "blur(12px)"
+  boxShadow: "0 10px 40px -10px rgba(0, 0, 0, 0.05)"
 };
+
+
 
 export default function DecisionTreeViz({ filePath, targetCol }) {
   const [treeData, setTreeData] = useState(null);
@@ -62,34 +65,34 @@ export default function DecisionTreeViz({ filePath, targetCol }) {
           style={{ cursor: 'pointer', filter: `drop-shadow(0 0 5px ${theme.accent})` }}
         />
         
-        {/* Main Label (Split Condition) - FORCED WHITE FILL */}
+        {/* Main Label (Split Condition) - DARK TEXT */}
         <text 
-          fill="#ffffff" 
+          fill="#1e293b" 
           stroke="none"
           x="22" 
           dy="-5" 
           fontSize="14px" 
-          fontWeight="bold"
+          fontWeight="600"
           style={{ 
-            fontFamily: 'monospace', 
-            textShadow: '2px 2px 2px #000000', // Stroke shadow for readability
+            fontFamily: "'Outfit', sans-serif", 
+            textShadow: '0 1px 2px rgba(255,255,255,0.8)', 
             pointerEvents: 'none'
           }}
         >
           {nodeDatum.name}
         </text>
 
-        {/* Sub Label (Gini/Samples) - FORCED CYAN FILL */}
+        {/* Sub Label (Gini/Samples) - ACCENT SECONDARY */}
         {nodeDatum.attributes && (
           <text 
-            fill={theme.accent} 
+            fill={theme.accentSecondary} 
             stroke="none"
             x="22" 
             dy="15" 
             fontSize="11px"
             style={{ 
-              fontFamily: 'monospace', 
-              opacity: 0.9,
+              fontFamily: "'Outfit', sans-serif", 
+              opacity: 0.8,
               pointerEvents: 'none'
             }}
           >
@@ -100,10 +103,11 @@ export default function DecisionTreeViz({ filePath, targetCol }) {
     );
   };
 
+
   return (
     <div style={{ marginTop: '30px', ...containerStyles }}>
       {loading && (
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: theme.accent, fontFamily: 'monospace' }}>
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: theme.accent, fontFamily: "'Outfit', sans-serif", fontWeight: '600' }}>
            &gt; GENERATING_LOGIC_MATRIX...
         </div>
       )}
@@ -125,20 +129,20 @@ export default function DecisionTreeViz({ filePath, targetCol }) {
         .custom-link {
           stroke: ${theme.accent} !important;
           stroke-width: 2px !important;
-          opacity: 0.6;
+          opacity: 0.15;
           fill: none;
-          animation: flow 2s linear infinite;
         }
-        /* Safeties to force text color if custom render fails */
         .rd3t-label__title {
-          fill: #ffffff !important;
-          font-family: monospace;
+          fill: #1e293b !important;
+          font-family: 'Outfit', sans-serif;
         }
         .rd3t-label__attributes {
-          fill: ${theme.accent} !important;
-          font-family: monospace;
+          fill: ${theme.accentSecondary} !important;
+          font-family: 'Outfit', sans-serif;
         }
       `}</style>
+
+
     </div>
   );
 }

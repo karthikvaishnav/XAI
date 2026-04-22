@@ -11,60 +11,69 @@ const Plot = createPlotlyComponent(Plotly);
 
 // --- THEME & STYLES ---
 const theme = {
-  bg: "#020617",
-  glass: "rgba(15, 23, 42, 0.7)",
-  accent: "#22d3ee",
-  accentGlow: "rgba(34, 211, 238, 0.3)",
-  text: "#f8fafc",
-  grid: "#1e293b",
+  bg: "#fdfcf0",
+  glass: "rgba(255, 255, 255, 0.4)",
+  accent: "#6366f1",
+  accentSecondary: "#8b5cf6",
+  accentGlow: "rgba(99, 102, 241, 0.08)",
+  text: "#1e293b",
+  textSecondary: "#64748b",
+  grid: "rgba(0, 0, 0, 0.05)",
   danger: "#f43f5e",
   success: "#10b981",
-  flame: "#ff5722",
-  flameCore: "#ffeb3b"
+  flame: "#6366f1",
+  flameCore: "#a855f7"
 };
 
 const cardStyle = {
-  background: theme.glass,
-  backdropFilter: "blur(12px)",
-  border: "1px solid rgba(34, 211, 238, 0.2)",
-  boxShadow: `0 8px 32px 0 rgba(0, 0, 0, 0.8), inset 0 0 15px ${theme.accentGlow}`,
-  padding: "20px",
-  borderRadius: "8px",
+  background: "#ffffff",
+  border: "1px solid rgba(0, 0, 0, 0.05)",
+  boxShadow: "0 10px 40px -10px rgba(0, 0, 0, 0.1)",
+  padding: "26px",
+  borderRadius: "16px",
   color: theme.text,
   position: "relative",
   zIndex: 2,
   marginBottom: "20px",
   display: "flex",
   flexDirection: "column",
+  transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
   overflow: "hidden"
 };
 
 const btnStyle = {
-  padding: "12px 24px",
-  background: "transparent",
-  color: theme.accent,
-  border: `1px solid ${theme.accent}`,
-  borderRadius: "4px",
-  fontSize: "12px",
-  fontWeight: "bold",
+  padding: "12px 28px",
+  background: `linear-gradient(135deg, ${theme.accent}, ${theme.accentSecondary})`,
+  color: "#white",
+  border: "none",
+  borderRadius: "8px",
+  fontSize: "13px",
+  fontWeight: "600",
   textTransform: "uppercase",
-  letterSpacing: "2px",
+  letterSpacing: "1.5px",
   cursor: "pointer",
-  boxShadow: `0 0 10px ${theme.accentGlow}`,
-  transition: "0.3s all ease",
-  marginTop: "10px"
+  boxShadow: `0 4px 20px ${theme.accentGlow}`,
+  transition: "0.3s all cubic-bezier(0.4, 0, 0.2, 1)",
+  marginTop: "10px",
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "8px"
 };
 
 const inputStyle = {
   width: "100%",
   boxSizing: "border-box",
-  padding: "12px",
-  background: "#1e293b",
+  padding: "14px",
+  background: "#f8fafc",
   color: theme.text,
-  border: `1px solid ${theme.accent}`,
-  borderRadius: "4px",
-  fontFamily: "monospace",
-  marginBottom: "10px"
+  border: "1px solid #e2e8f0",
+  borderRadius: "10px",
+  fontFamily: "inherit",
+  fontSize: "14px",
+  marginBottom: "10px",
+  outline: "none",
+  transition: "all 0.2s ease"
 };
 
 const checkboxStyle = {
@@ -77,56 +86,85 @@ const checkboxStyle = {
 const sciFiPlotLayout = {
   paper_bgcolor: "rgba(0,0,0,0)",
   plot_bgcolor: "rgba(0,0,0,0)",
-  font: { color: theme.text, family: "monospace", size: 12 },
+  font: { color: theme.text, family: "'Outfit', sans-serif", size: 12 },
   xaxis: {
-    gridcolor: theme.grid,
+    gridcolor: "rgba(0,0,0,0.05)",
     zerolinecolor: theme.accent,
-    tickfont: { color: theme.text, size: 11 },
-    automargin: true
+    tickfont: { color: theme.textSecondary, size: 11 },
+    automargin: true,
+    showgrid: true
   },
   yaxis: {
-    gridcolor: theme.grid,
+    gridcolor: "rgba(0,0,0,0.05)",
     zerolinecolor: theme.accent,
-    tickfont: { color: theme.text, size: 11 },
-    automargin: true
+    tickfont: { color: theme.textSecondary, size: 11 },
+    automargin: true,
+    showgrid: true
   },
   margin: { t: 40, b: 50, l: 60, r: 20 },
   scene: {
-    xaxis: { gridcolor: theme.grid, backgroundcolor: "rgba(0,0,0,0)", showbackground: false, color: theme.text },
-    yaxis: { gridcolor: theme.grid, backgroundcolor: "rgba(0,0,0,0)", showbackground: false, color: theme.text },
-    zaxis: { gridcolor: theme.grid, backgroundcolor: "rgba(0,0,0,0)", showbackground: false, color: theme.text },
+    xaxis: { gridcolor: "rgba(0,0,0,0.1)", backgroundcolor: "rgba(0,0,0,0)", showbackground: false, color: theme.text },
+    yaxis: { gridcolor: "rgba(0,0,0,0.1)", backgroundcolor: "rgba(0,0,0,0)", showbackground: false, color: theme.text },
+    zaxis: { gridcolor: "rgba(0,0,0,0.1)", backgroundcolor: "rgba(0,0,0,0)", showbackground: false, color: theme.text },
   },
-  legend: { font: { color: theme.text } }
+  legend: { font: { color: theme.text, size: 11 } }
 };
 
 // --- 🌟 NEW ANIMATION COMPONENTS ---
 
 // 1. STAR FIELD BACKGROUND
 const StarField = () => {
-  // Memoize positions so they don't re-randomize on every parent re-render
-  const stars = useMemo(() =>
-    [...Array(50)].map((_, i) => ({
-      top: `${Math.random() * 100}%`,
-      left: `${Math.random() * 100}%`,
-      delay: `${Math.random() * 5}s`,
-      twinkle: i % 3 === 0
-    })),
+  // Rich twinkling dot field — Indigo/Violet/Slate palette for Ivory theme
+  const dots = useMemo(() =>
+    [...Array(80)].map((_, i) => {
+      const palette = [
+        'rgba(79, 70, 229, 0.55)',   // Deep Indigo
+        'rgba(124, 58, 237, 0.45)',  // Violet
+        'rgba(100, 116, 139, 0.40)', // Slate
+        'rgba(16, 185, 129, 0.35)',  // Emerald
+        'rgba(245, 158, 11, 0.35)',  // Amber
+        'rgba(99, 102, 241, 0.50)',  // Indigo mid
+      ];
+      const size = Math.random() * 6 + 3;  // 3–09px — bigger so they're always visible
+      return {
+        top: `${Math.random() * 100}%`,
+        left: `${Math.random() * 100}%`,
+        delay: `${(Math.random() * 6).toFixed(2)}s`,
+        duration: `${(2 + Math.random() * 3).toFixed(2)}s`,
+        size: `${size}px`,
+        borderRadius: size > 6 ? '35%' : '50%',
+        color: palette[i % palette.length],
+      };
+    }),
   []);
 
   return (
     <div className="star-container">
-      {stars.map((s, i) => (
+      {dots.map((s, i) => (
         <div
           key={i}
-          className={`star ${s.twinkle ? 'twinkle' : ''}`}
-          style={{ top: s.top, left: s.left, animationDelay: s.delay }}
+          className="twinkle"
+          style={{
+            position: 'absolute',
+            top: s.top,
+            left: s.left,
+            width: s.size,
+            height: s.size,
+            borderRadius: s.borderRadius,
+            background: s.color,
+            animationDelay: s.delay,
+            animationDuration: s.duration,
+          }}
         />
       ))}
-      <div className="shooting-star" style={{ top: '10%', left: '80%' }} />
-      <div className="shooting-star" style={{ top: '40%', left: '90%', animationDelay: '4s' }} />
+      {/* Subtle shooting dots */}
+      <div className="shooting-star" style={{ top: '8%',  left: '75%',  animationDelay: '0s'  }} />
+      <div className="shooting-star" style={{ top: '30%', left: '88%',  animationDelay: '3.5s' }} />
+      <div className="shooting-star" style={{ top: '60%', left: '95%',  animationDelay: '7s'   }} />
     </div>
   );
 };
+
 
 // // 2. SCI-FI RINGS (HALO)
 // const SciFiHalo = () => {
@@ -413,12 +451,14 @@ function App() {
 
       const featureMeta = {};
       expData.forEach(item => {
-        const v = item.value;
+        const v = item.value;  // now raw/unscaled value from backend
+        const absV = Math.abs(v);
         featureMeta[item.feature] = {
           original: v,
-          min: v - Math.abs(v) * 1.5 - 0.1,
-          max: v + Math.abs(v) * 1.5 + 0.1,
-          step: Math.max(0.01, Math.abs(v) * 0.05)
+          // Generous range so sliders are useful — ±150% of the current value with a minimum span
+          min: v - Math.max(absV * 1.5, 1),
+          max: v + Math.max(absV * 1.5, 1),
+          step: Math.max(0.01, absV * 0.02)
         };
       });
       setFeatureMeta(featureMeta);
@@ -458,7 +498,7 @@ function App() {
     
     html2canvas(dashboardElement, { scale: 2, backgroundColor: theme.bg }).then(canvas => {
       const link = document.createElement('a');
-      link.download = 'XAI_Dashboard_Capture.png';
+      link.download = 'GlassBox_Dashboard.png';
       link.href = canvas.toDataURL("image/png");
       link.click();
     });
@@ -471,7 +511,7 @@ function App() {
     
     doc.setTextColor(34, 211, 238);
     doc.setFontSize(22);
-    doc.text("XAI Analysis Report", 20, 30);
+    doc.text("GlassBox Analysis Report", 20, 30);
     
     doc.setTextColor(248, 250, 252);
     doc.setFontSize(12);
@@ -490,7 +530,7 @@ function App() {
       doc.addPage();
       doc.setFillColor(2, 6, 23);
       doc.rect(0, 0, 210, 297, "F");
-      doc.setTextColor(34, 211, 238);
+      doc.setTextColor(99, 102, 241); // Indigo Primary
       doc.setFontSize(18);
       doc.text(`Local Explanation (ID: ${clickedIndex})`, 20, 30);
       
@@ -515,7 +555,7 @@ function App() {
       }
     }
     
-    doc.save("XAI_Full_Report.pdf");
+    doc.save("GlassBox_Report.pdf");
   };
 
  // --- REGRESSION DASHBOARD ---
@@ -641,7 +681,7 @@ function App() {
           <h4 style={{ margin: "0 0 10px 0", color: theme.accent }}>D // COEFFICIENT_VECTOR</h4>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: "10px" }}>
             {Object.entries(coefficients).map(([key, val]) => (
-              <div key={key} style={{ background: "rgba(0,0,0,0.3)", padding: "5px", borderRadius: "4px" }}>
+              <div key={key} style={{ background: "rgba(255,255,255,0.03)", padding: "10px", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.05)" }}>
                 <div style={{ fontSize: "10px", color: theme.accent }}>{key}</div>
                 <div style={{ color: val > 0 ? theme.success : theme.danger }}>{typeof val === 'number' ? val.toFixed(4) : val}</div>
               </div>
@@ -656,7 +696,7 @@ function App() {
   return (
     <div style={{
       backgroundColor: theme.bg, minHeight: "100vh", width: "100vw", padding: "20px", boxSizing: "border-box",
-      fontFamily: "monospace", color: theme.text, backgroundImage: `radial-gradient(circle at center, #0f172a 0%, #020617 100%)`,
+      fontFamily: "'Outfit', sans-serif", color: theme.text, backgroundImage: `radial-gradient(circle at 50% 0%, #ffffff 0%, #fefce8 100%)`,
       display: "flex", flexDirection: "column", overflowX: "hidden", position: "relative"
     }}>
 
@@ -677,9 +717,9 @@ function App() {
       )}
 
       <header style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", margin: "20px 0 40px 0", flexShrink: 0, position: "relative", zIndex: 10 }}>
-        <div className="terminal-container"><h1 className="terminal-text">XAI_COMMAND_DECK</h1></div>
+        <div className="terminal-container"><h1 className="terminal-text">GLASSBOX</h1></div>
         <div style={{ fontSize: "10px", color: theme.accent, marginTop: "10px", letterSpacing: "2px" }}>
-          [ SYSTEM_STATUS: {loading ? "BOOST_SEQUENCER_ACTIVE" : "READY"} ]
+          [ GLASSBOX_STATUS: {loading ? "TRAINING_IN_PROGRESS" : "READY"} ]
         </div>
       </header>
 
@@ -717,7 +757,7 @@ function App() {
                     <thead>
                       <tr>
                         {columns.map(col => (
-                          <th key={col} style={{ padding: "8px 12px", background: "rgba(34,211,238,0.1)", color: theme.accent, borderBottom: `1px solid ${theme.grid}`, whiteSpace: "nowrap", textAlign: "left" }}>
+                          <th key={col} style={{ padding: "10px 14px", background: "rgba(99, 102, 241, 0.1)", color: theme.accent, borderBottom: `1px solid ${theme.grid}`, whiteSpace: "nowrap", textAlign: "left" }}>
                             {col}
                             {dataStats[col] && (
                               <div style={{ fontSize: "9px", color: theme.text, opacity: 0.5, fontWeight: "normal" }}>
@@ -868,12 +908,55 @@ function App() {
               const { metrics, confusion_matrix, feature_importance } = result;
               return (
                 <div style={{ width: "100%", animation: "fadeIn 0.5s" }}>
-                  {/* METRICS ROW */}
-                  <div style={{ ...cardStyle, flexDirection: "row", justifyContent: "space-around", textAlign: "center" }}>
-                    <div><div style={{ color: theme.accent, fontSize: "10px" }}>ACCURACY</div><div style={{ fontSize: "24px", fontWeight: "bold" }}>{(metrics.accuracy * 100).toFixed(1)}%</div></div>
-                    <div><div style={{ color: theme.success, fontSize: "10px" }}>PRECISION</div><div style={{ fontSize: "24px" }}>{metrics.precision.toFixed(2)}</div></div>
-                    <div><div style={{ color: "#fab005", fontSize: "10px" }}>RECALL</div><div style={{ fontSize: "24px" }}>{metrics.recall.toFixed(2)}</div></div>
-                    <div><div style={{ color: theme.danger, fontSize: "10px" }}>F1 SCORE</div><div style={{ fontSize: "24px" }}>{metrics.f1.toFixed(2)}</div></div>
+                {/* METRICS ROW */}
+                  <div style={{ ...cardStyle, flexDirection: "column" }}>
+                    {/* Top row: 4 key stats */}
+                    <div style={{ display: "flex", justifyContent: "space-around", textAlign: "center", marginBottom: metrics.precision !== metrics.recall ? "20px" : "0" }}>
+                      <div>
+                        <div style={{ color: theme.accent, fontSize: "10px", letterSpacing: "2px", marginBottom: "4px" }}>ACCURACY</div>
+                        <div style={{ fontSize: "28px", fontWeight: "700", color: theme.text }}>{(metrics.accuracy * 100).toFixed(1)}%</div>
+                      </div>
+                      <div>
+                        <div style={{ color: theme.success, fontSize: "10px", letterSpacing: "2px", marginBottom: "4px" }}>PRECISION</div>
+                        <div style={{ fontSize: "28px", fontWeight: "700", color: theme.text }}>{(metrics.precision * 100).toFixed(1)}%</div>
+                      </div>
+                      <div>
+                        <div style={{ color: "#f59e0b", fontSize: "10px", letterSpacing: "2px", marginBottom: "4px" }}>RECALL</div>
+                        <div style={{ fontSize: "28px", fontWeight: "700", color: theme.text }}>{(metrics.recall * 100).toFixed(1)}%</div>
+                      </div>
+                      <div>
+                        <div style={{ color: theme.danger, fontSize: "10px", letterSpacing: "2px", marginBottom: "4px" }}>F1 SCORE</div>
+                        <div style={{ fontSize: "28px", fontWeight: "700", color: theme.text }}>{(metrics.f1 * 100).toFixed(1)}%</div>
+                      </div>
+                    </div>
+                    {/* Sub-label */}
+                    <div style={{ textAlign: "center", fontSize: "10px", color: theme.textSecondary, opacity: 0.7, marginBottom: "16px" }}>
+                      Macro-averaged — each class weighted equally
+                    </div>
+                    {/* Per-class breakdown table */}
+                    {result.per_class_metrics && result.per_class_metrics.length > 0 && (
+                      <div style={{ overflowX: "auto" }}>
+                        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12px", fontFamily: "inherit" }}>
+                          <thead>
+                            <tr>
+                              {["CLASS", "PRECISION", "RECALL", "F1"].map(h => (
+                                <th key={h} style={{ padding: "8px 14px", background: "rgba(99,102,241,0.06)", color: theme.accent, borderBottom: `1px solid ${theme.grid}`, textAlign: "left", letterSpacing: "1px", fontWeight: "600" }}>{h}</th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {result.per_class_metrics.map((row, i) => (
+                              <tr key={i} style={{ borderBottom: `1px solid ${theme.grid}` }}>
+                                <td style={{ padding: "8px 14px", fontWeight: "600", color: theme.accentSecondary }}>{row.class}</td>
+                                <td style={{ padding: "8px 14px", color: row.precision >= 0.7 ? theme.success : theme.danger }}>{(row.precision * 100).toFixed(1)}%</td>
+                                <td style={{ padding: "8px 14px", color: row.recall >= 0.7 ? theme.success : theme.danger }}>{(row.recall * 100).toFixed(1)}%</td>
+                                <td style={{ padding: "8px 14px", color: row.f1 >= 0.7 ? theme.success : theme.danger }}>{(row.f1 * 100).toFixed(1)}%</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
                   </div>
 
                   {selectedModel === 'dt' && (
@@ -1201,14 +1284,14 @@ function App() {
             {/* MULTI-MODEL COMPARISON PANEL                   */}
             {/* ═══════════════════════════════════════════════ */}
             {result.task !== 'regression' && (
-              <div style={{ ...cardStyle, border: `1px solid #fab005`, marginTop: "30px", animation: "fadeIn 0.8s" }}>
+              <div style={{ ...cardStyle, border: "1px solid rgba(245, 158, 11, 0.3)", marginTop: "30px", animation: "fadeIn 0.8s" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "15px" }}>
                   <div>
-                    <h4 style={{ margin: 0, color: "#fab005", letterSpacing: "2px" }}>&gt; MULTI_MODEL_COMPARISON</h4>
+                    <h4 style={{ margin: 0, color: "#f59e0b", letterSpacing: "2px" }}>&gt; MULTI_MODEL_COMPARISON</h4>
                     <div style={{ fontSize: "10px", color: theme.text, opacity: 0.6, marginTop: "4px" }}>Compare all classifiers on the same dataset and split.</div>
                   </div>
                   <button onClick={handleCompare} disabled={comparing}
-                    style={{ ...btnStyle, marginTop: 0, borderColor: "#fab005", color: "#fab005" }}
+                    style={{ ...btnStyle, marginTop: 0, background: "rgba(245, 158, 11, 0.1)", border: "1px solid #f59e0b", color: "#f59e0b" }}
                   >
                     {comparing ? "RUNNING..." : "RUN_COMPARISON"}
                   </button>
@@ -1222,14 +1305,14 @@ function App() {
                         <thead>
                           <tr>
                             {["MODEL", "ACCURACY", "PRECISION", "RECALL", "F1"].map(h => (
-                              <th key={h} style={{ padding: "10px 16px", background: "rgba(250,176,5,0.1)", color: "#fab005", borderBottom: `1px solid ${theme.grid}`, textAlign: "left", letterSpacing: "1px" }}>{h}</th>
+                              <th key={h} style={{ padding: "10px 16px", background: "rgba(245,158,11,0.1)", color: "#f59e0b", borderBottom: `1px solid ${theme.grid}`, textAlign: "left", letterSpacing: "1px" }}>{h}</th>
                             ))}
                           </tr>
                         </thead>
                         <tbody>
                           {comparisonData.comparison.map((row, i) => (
-                            <tr key={i} style={{ borderBottom: `1px solid ${theme.grid}`, background: row.model_type === selectedModel ? "rgba(34,211,238,0.05)" : "transparent" }}>
-                              <td style={{ padding: "10px 16px", color: row.model_type === selectedModel ? theme.accent : theme.text, fontWeight: row.model_type === selectedModel ? "bold" : "normal" }}>
+                            <tr key={i} style={{ borderBottom: `1px solid ${theme.grid}`, background: row.model_type === selectedModel ? "rgba(99,102,241,0.05)" : "transparent" }}>
+                              <td style={{ padding: "10px 16px", color: row.model_type === selectedModel ? theme.accentSecondary : theme.text, fontWeight: row.model_type === selectedModel ? "bold" : "normal" }}>
                                 {row.model} {row.model_type === selectedModel && "★"}
                               </td>
                               {["accuracy", "precision", "recall", "f1"].map(m => (
@@ -1319,15 +1402,16 @@ function App() {
         }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(34, 211, 238, 0.3); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #22d3ee; }
-        body { margin: 0; overflow-x: hidden; background: #020617; }
+        ::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.3); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: ${theme.accent}; }
+        body { margin: 0; overflow-x: hidden; background: ${theme.bg}; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         input[type=range].scifi-slider { -webkit-appearance: none; width: 100%; background: transparent; }
         input[type=range].scifi-slider:focus { outline: none; }
-        input[type=range].scifi-slider::-webkit-slider-runnable-track { width: 100%; height: 6px; cursor: pointer; background: ${theme.grid}; border-radius: 2px; border: 1px solid ${theme.accentGlow}; box-shadow: inset 0 0 5px #000; }
-        input[type=range].scifi-slider::-webkit-slider-thumb { height: 18px; width: 18px; border-radius: 50%; background: ${theme.bg}; border: 2px solid ${theme.accent}; cursor: pointer; -webkit-appearance: none; margin-top: -7px; box-shadow: 0 0 10px ${theme.accent}; transition: transform 0.1s; }
-        input[type=range].scifi-slider:focus::-webkit-slider-thumb { background: ${theme.accent}; transform: scale(1.2); }
+        input[type=range].scifi-slider::-webkit-slider-runnable-track { width: 100%; height: 6px; cursor: pointer; background: #e2e8f0; border-radius: 4px; border: 1px solid rgba(0,0,0,0.05); }
+        input[type=range].scifi-slider::-webkit-slider-thumb { height: 18px; width: 18px; border-radius: 50%; background: #ffffff; border: 2px solid ${theme.accent}; cursor: pointer; -webkit-appearance: none; margin-top: -7px; box-shadow: 0 2px 10px rgba(99, 102, 241, 0.2); transition: transform 0.1s; }
+        input[type=range].scifi-slider:focus::-webkit-slider-thumb { background: ${theme.accent}; transform: scale(1.1); }
+
         .rocket-container { position: fixed; right: 15%; z-index: 999; will-change: transform; }
         .hovering { bottom: 15%; animation: hover-shake 3s infinite ease-in-out; }
         .launching { animation: launch-boost-final 2s forwards cubic-bezier(.62,-0.01,.23,1); }
@@ -1342,35 +1426,37 @@ function App() {
         @keyframes hover-shake { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-15px) rotate(1deg); } }
         @keyframes launch-boost-final { 0% { transform: translateY(0); bottom: 15%; } 15% { transform: translateY(20px); bottom: 15%; } 100% { transform: translateY(-150vh); bottom: 15%; } }
         @keyframes flicker { 0% { opacity: 0.8; transform: translateX(-50%) scaleX(0.9); } 100% { opacity: 1; transform: translateX(-50%) scaleX(1.1); } }
-        .terminal-text { font-size: clamp(1.2rem, 5vw, 2.5rem); letter-spacing: 8px; color: ${theme.accent}; text-shadow: 0 0 10px ${theme.accentGlow}; white-space: nowrap; overflow: hidden; border-right: 4px solid ${theme.accent}; animation: typing 4s steps(16, end) infinite, blink-cursor 0.75s step-end infinite; }
+        .terminal-text { font-size: clamp(1.2rem, 5vw, 2.5rem); letter-spacing: 8px; color: ${theme.accent}; text-shadow: 0 2px 4px rgba(0,0,0,0.1); white-space: nowrap; overflow: hidden; border-right: 4px solid ${theme.accent}; animation: typing 4s steps(16, end) infinite, blink-cursor 0.75s step-end infinite; }
+
         @keyframes typing { 0%, 100% { width: 0 } 50%, 90% { width: 100% } }
         @keyframes blink-cursor { from, to { border-color: transparent } 50% { border-color: ${theme.accent} } }
         @keyframes blink { 50% { opacity: 0; } }
-        .scanline { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%); background-size: 100% 4px; z-index: 1000; pointer-events: none; opacity: 0.3; }
+        .scanline { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.02) 50%); background-size: 100% 4px; z-index: 1000; pointer-events: none; opacity: 0.1; }
 
-        /* --- 🌟 STAR BACKGROUND ANIMATION --- */
+
+        /* --- ✨ TWINKLING DOTS ANIMATION --- */
         .star-container {
           position: fixed; top: 0; left: 0; width: 100%; height: 100%;
           z-index: 0; pointer-events: none;
         }
-        .star {
-          position: absolute; width: 2px; height: 2px;
-          background: white; border-radius: 50%; opacity: 0.5;
+        .twinkle {
+          /* duration comes from inline style (animationDuration) so each dot has its own pace */
+          animation: twinkle-pulse var(--dur, 3s) infinite ease-in-out;
+          animation-duration: inherit;
         }
-        .twinkle { animation: twinkle-pulse 3s infinite ease-in-out; }
         @keyframes twinkle-pulse {
-          0%, 100% { opacity: 0.3; transform: scale(1); }
+          0%, 100% { opacity: 0.4; transform: scale(0.85); }
           50% { opacity: 1; transform: scale(1.5); }
         }
         .shooting-star {
-          position: absolute; width: 2px; height: 2px;
-          background: linear-gradient(90deg, white, transparent);
+          position: absolute; width: 3px; height: 3px;
+          background: linear-gradient(120deg, rgba(99,102,241,0.7), transparent);
           border-radius: 50%; opacity: 0;
-          animation: shoot 8s infinite linear;
+          animation: shoot 9s infinite linear;
         }
         @keyframes shoot {
-          0% { transform: translateX(0) translateY(0) scale(1); opacity: 1; }
-          10% { transform: translateX(-500px) translateY(500px) scale(0); opacity: 0; }
+          0%   { transform: translateX(0) translateY(0) scale(1); opacity: 0.9; }
+          8%   { transform: translateX(-420px) translateY(420px) scale(0); opacity: 0; }
           100% { opacity: 0; }
         }
 
